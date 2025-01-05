@@ -1,5 +1,6 @@
 import * as cache from "@actions/cache";
 import * as core from "@actions/core";
+import { $ } from "bun";
 import {
 	getBinDir,
 	getBooleanInput,
@@ -62,7 +63,7 @@ async function run() {
 
 		if (autoInstall) {
 			//const { stdout, stderr } =
-			await Bun.$`proto use`.cwd(getWorkspaceRoot());
+			await $`proto use`.cwd(getWorkspaceRoot());
 
 			//await execa('proto', ['use'], { cwd: getWorkspaceRoot(), stdio: 'inherit' });
 		}

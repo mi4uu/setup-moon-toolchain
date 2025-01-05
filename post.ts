@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import * as cache from "@actions/cache";
 import * as core from "@actions/core";
+import { $ } from "bun";
 import {
 	getPluginsDir,
 	getToolchainCacheKey,
@@ -13,7 +14,7 @@ async function cleanToolchain() {
 	try {
 		core.info("Cleaning toolchain of stale items before caching");
 
-		await Bun.$`proto clean --yes`;
+		await $`proto clean --yes`;
 	} catch (error: unknown) {
 		core.warning(error as Error);
 	}

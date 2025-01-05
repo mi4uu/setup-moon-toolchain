@@ -27,28 +27,12 @@ inputs:
 outputs:
   cache-key:
     description: 'The cache key used for the toolchain folder (~/.proto).'
-    value: ${{ steps.dist-index.outputs.cache-key }}
   cache-hit:
     description: 'A boolean to indicate an exact match was found for the cache key.'
-    value: ${{ steps.dist-index.outputs.cache-hit }}
 runs:
-  using: 'composite'
-  steps:
-    - name: "set chmod for dist/index"
-      run: chmod +rx dist/post/index
-      shell: bash
-    - name: "set chmod for dist/post/index"
-      run: chmod +rx dist/post/index
-      shell: bash
-    - name: "run dist/index"
-      id: dist-index
-      run: ./dist/index
-      shell: bash
-    - name: "run dist/post/index"
-      run: ./dist/post/index
-      shell: bash
-
-
+  using: 'node20'
+  main: 'dist/index.js'
+  post: 'dist/post/index.js'
 branding:
   icon: 'battery-charging'
   color: 'purple'

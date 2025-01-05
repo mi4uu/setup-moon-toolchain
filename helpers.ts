@@ -6,6 +6,7 @@ import * as cache from "@actions/cache";
 import * as core from "@actions/core";
 import * as glob from "@actions/glob";
 import * as tc from "@actions/tool-cache";
+import { $ } from "bun";
 
 export const WINDOWS = process.platform === "win32";
 
@@ -186,7 +187,7 @@ export async function installBin(bin: string) {
 	const binPath = path.join(binDir, WINDOWS ? `${bin}.exe` : bin);
 	const envPrefix = bin.toUpperCase();
 	const env = `${envPrefix}_INSTALL_DIR="${binDir}"`;
-	Bun.$`${env} ${script} ${version === "latest" ? "" : version}`;
+	$`${env} ${script} ${version === "latest" ? "" : version}`;
 	// await execa(script, version === 'latest' ? [] : [version], {
 	// 	env: {
 	// 		[`${envPrefix}_INSTALL_DIR`]: binDir,
@@ -199,7 +200,7 @@ export async function installBin(bin: string) {
 	core.info("Checking version");
 
 	try {
-		const result = await Bun.$`${binPath} --version`;
+		const result = await $`${binPath} --version`;
 		// await execa(binPath, ['--version'], { stdio: 'pipe' });
 
 		if (result.stdout) {
