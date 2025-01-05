@@ -34,27 +34,16 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - uses: actions/cache@v4
-      id: cache
-      with:
-        path: |
-          ~/.proto
-        key: ${{ runner.os }}-proto
-    - name: Install proto and moon
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: |
-            curl -fsSL https://moonrepo.dev/install/proto.sh | bash -s -- --yes
-            pwd
-            ls -la
-            export PATH=$PATH:~/.proto/bin/
-            proto plugin add moon "https://raw.githubusercontent.com/moonrepo/moon/master/proto-plugin.toml" --to global
-            proto install moon
-            proto install bun
-      shell: bash
+  
+    - uses: oven-sh/setup-bun@v2
+      env:
+        INPUT_NO_CACHE: "false"
+        INPUT_BUN_VERSION: "1.1.42"
+        INPUT_BUN-VERSION: "1.1.42"
+        WORKSPACE-ROOT: ${{ inputs.workspace-root }}
     - name: "run ci"
       id: dist-index
       run: |
-        export PATH=$PATH:~/.proto/bin/
         bun run --bun ./dist/index.js
         bun run --bun ./dist/post.js
       env:
@@ -63,7 +52,6 @@ runs:
         INPUT_MOON-VERSION: ${{ inputs.moon-version }}
         INPUT_PROTO-VERSION: ${{ inputs.proto-version }}
         INPUT_WORKSPACE-ROOT: ${{ inputs.workspace-root }}
-        INPUT_AUTO-INSTALL: ${{ inputs.auto-install }}
       shell: bash
 
 
