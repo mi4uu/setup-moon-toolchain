@@ -2,10 +2,10 @@
 	"extends": "tsconfig-moon/tsconfig.json",
 	"compilerOptions": {
 		"allowJs": true,
-		"module": "Node16",
-		"moduleResolution": "nodenext",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
 		"noEmit": true,
 		"verbatimModuleSyntax": false
 	},
-	"include": [".eslintrc.js", "*.js", "*.ts", "tests/*.ts"]
+	"include": ["tests/*.ts", "src/index.ts", "src/post.ts", "src/helpers.ts"]
 }

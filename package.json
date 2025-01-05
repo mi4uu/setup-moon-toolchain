@@ -1,16 +1,10 @@
 {
 	"name": "@mi4uu/setup-moon-toolchain",
 	"version": "0.0.1",
-	"type_": "module",
+	"type": "module",
 	"description": "A GitHub action to setup and cache the proto and moon toolchains. BUNIFIED",
-	"main": "dist/index.js",
+	"main": "dist/run-index.js",
 	"scripts": {
-		"build:post": "bun build --entrypoints ./post.ts --outfile ./dist/post/index --compile",
-		"build:index": "bun build --entrypoints ./index.ts --outfile ./dist/index --compile",
-		"build:post_": "bun build --entrypoints ./post.ts --outfile ./dist/post/index.js --target node --minify",
-		"build:index_": "bun build --entrypoints ./index.ts --outfile ./dist/index.js --target node --minify",
-		"build:post:bun": "bun build --entrypoints ./post.ts --outfile ./dist/post/index_bun.js --target bun --bytecode",
-		"build:index:bun": "bun build --entrypoints ./index.ts --outfile ./dist/index_bun.js --target bun --bytecode",
 		"build": "bun run ./build.sh",
 		"build:bun": "bun run build:index:bun && bun run build:post:bun",
 		"check:ci": "biome ci --vcs-enabled=true --vcs-use-ignore-file=true",
@@ -31,6 +25,7 @@
 	"dependencies": {
 		"@actions/cache": "4.0.0",
 		"@actions/core": "^1.11.1",
+		"@actions/exec": "^1.1.1",
 		"@actions/glob": "^0.5.0",
 		"@actions/tool-cache": "^2.0.1"
 	},
