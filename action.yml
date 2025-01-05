@@ -46,15 +46,16 @@ runs:
         echo $GITHUB_PATH
         echo "PATH=\"${PATH}\":~/.proto/bin/" >> $GITHUB_PATH
         bun run --bun ./dist/index.js
-        ls ~/.proto/bin/
         bun run --bun ./dist/post.js
-        ls ~/.proto/bin/
+        echo $GITHUB_PATH
+
       env:
         INPUT_CACHE: ${{ inputs.cache }}
         INPUT_CACHE-BASE: ${{ inputs.cache-base }}
         INPUT_MOON-VERSION: ${{ inputs.moon-version }}
         INPUT_PROTO-VERSION: ${{ inputs.proto-version }}
         INPUT_WORKSPACE-ROOT: ${{ inputs.workspace-root }}
+        INPUT_AUTO-INSTALL: ${{ inputs.auto-install }}
       shell: bash
 
 

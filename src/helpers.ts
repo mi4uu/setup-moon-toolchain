@@ -186,7 +186,6 @@ export async function installBin(bin: string) {
 	const binDir = getBinDir();
 	const binPath = path.join(binDir, WINDOWS ? `${bin}.exe` : bin);
 	const envPrefix = bin.toUpperCase();
-	// const env = `${envPrefix}_INSTALL_DIR="${binDir}"`;
 	const env = {
 		...(Object.fromEntries(
 			Object.entries(process.env).filter(([_, v]) => v !== undefined),
@@ -194,32 +193,13 @@ export async function installBin(bin: string) {
 		[`${envPrefix}_INSTALL_DIR`]: binDir,
 	};
 	await $`${script} ${version === "latest" ? "" : version}`.env(env);
-	// await execa(script, version === 'latest' ? [] : [version], {
-	// 	env: {
-	// 		[`${envPrefix}_INSTALL_DIR`]: binDir,
-	// 	},
-	// 	stdio: core.isDebug() || !!process.env[`${envPrefix}_DEBUG`] ? 'inherit' : 'pipe',
-	// });
 
 	core.info(`Installed binary to ${binPath}`);
 
 	core.info("Checking version");
 
 	try {
-		core.info("pwd");
-		core.info(await $`pwd`.text());
-		core.info("ls:");
-		core.info(await $`ls`.text());
-		core.info(`bindir  ${binDir} `);
-		core.info(await $`ls  ${binDir} `.nothrow().text());
-		core.info(`binpath ${binDir}`);
-		core.info(await $`ls  ${binPath} `.nothrow().text());
-		core.info("cmd");
-
-		core.info(`${env} ${script} ${version === "latest" ? "" : version}`);
-
 		const result = await $`${binPath} --version`;
-		// await execa(binPath, ['--version'], { stdio: 'pipe' });
 
 		if (result.stdout) {
 			// eslint-disable-next-line require-atomic-updates
