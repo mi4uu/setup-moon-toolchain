@@ -57,6 +57,7 @@ async function saveCache() {
 	} catch (error: unknown) {
 		core.setFailed(error as Error);
 	}
+	
 }
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
