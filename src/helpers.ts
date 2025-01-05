@@ -200,11 +200,16 @@ export async function installBin(bin: string) {
 	core.info("Checking version");
 
 	try {
+		core.info('pwd');
 		core.info(await $`pwd`.text());
+		core.info('ls:');
 		core.info(await $`ls`.text());
-		core.info(await $`ls  ${binDir} `.text());
+		core.info('bindir');
+		core.info(await $`ls  ${binDir} `.nothrow().text());
+		core.info('binpath');
+		core.info(await $`ls  ${binPath} `.nothrow().text());
+		core.info('cmd');
 
-		core.info(await $`ls  ${binPath} `.text());
 		core.info(`${env} ${script} ${version === "latest" ? "" : version}`);
 
 		const result = await $`${binPath} --version`;
