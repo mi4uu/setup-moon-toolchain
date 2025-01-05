@@ -3,10 +3,9 @@
 	"version": "0.0.1",
 	"type": "module",
 	"description": "A GitHub action to setup and cache the proto and moon toolchains. BUNIFIED",
-	"main": "dist/run-index.js",
+	"main": "dist/index.js",
 	"scripts": {
 		"build": "bun run ./build.sh",
-		"build:bun": "bun run build:index:bun && bun run build:post:bun",
 		"check:ci": "biome ci --vcs-enabled=true --vcs-use-ignore-file=true",
 		"check": "bun run lint && bun run test && bun run typecheck",
 		"deps": "bun update --latest --interactive",

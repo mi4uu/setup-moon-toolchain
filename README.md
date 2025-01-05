@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: oven-sh/setup-bun@v2
-      - uses: mi4uu/setup-moon-toolchain@v0
+      - uses: mi4uu/setup-moon-toolchain@0.0.0.2
         with:
           auto-install: true
       - run: moon ci

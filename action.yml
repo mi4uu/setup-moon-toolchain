@@ -27,12 +27,23 @@ inputs:
 outputs:
   cache-key:
     description: 'The cache key used for the toolchain folder (~/.proto).'
+    value: ${{ steps.dist-index.outputs.cache-key }}
   cache-hit:
     description: 'A boolean to indicate an exact match was found for the cache key.'
+    value: ${{ steps.dist-index.outputs.cache-hit }}
 runs:
-  using: 'node20'
-  main: 'dist/run-index.js'
-  post: 'dist/run-post.js'
+  using: 'composite'
+  steps:
+    - uses: oven-sh/setup-bun@v2
+    - name: "run ci"
+      id: dist-index
+      run: bun run --bun ./dist/index.js
+      shell: bash
+    - name: "run post"
+      run: bun run --bun ./dist/post.js
+      shell: bash
+
+
 branding:
   icon: 'battery-charging'
   color: 'purple'
