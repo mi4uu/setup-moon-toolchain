@@ -23,8 +23,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: oven-sh/setup-bun@v2
-      - uses: mi4uu/setup-moon-toolchain@0.0.0.2
+      - uses: mi4uu/setup-moon-toolchain@master
         with:
           auto-install: true
       - run: moon ci
