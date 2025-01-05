@@ -41,7 +41,6 @@ runs:
         bun run --bun ./dist/index.js
         bun run --bun ./dist/post.js
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         INPUT_CACHE: ${{ inputs.cache }}
         INPUT_CACHE-BASE: ${{ inputs.cache-base }}
         INPUT_MOON-VERSION: ${{ inputs.moon-version }}
