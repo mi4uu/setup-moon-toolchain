@@ -204,9 +204,9 @@ export async function installBin(bin: string) {
 		core.info(await $`pwd`.text());
 		core.info('ls:');
 		core.info(await $`ls`.text());
-		core.info('bindir');
+		core.info(`bindir  ${binDir} `);
 		core.info(await $`ls  ${binDir} `.nothrow().text());
-		core.info('binpath');
+		core.info(`binpath ${binDir}`);
 		core.info(await $`ls  ${binPath} `.nothrow().text());
 		core.info('cmd');
 
