@@ -44,6 +44,7 @@ runs:
     - name: "run ci"
       id: dist-index
       run: |
+        echo "PATH=\"${PATH}\":~/.proto/bin/" >> $GITHUB_PATH
         bun run --bun ./dist/index.js
         bun run --bun ./dist/post.js
       env:
