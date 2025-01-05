@@ -54,6 +54,7 @@ runs:
     - name: "run ci"
       id: dist-index
       run: |
+        export PATH=$PATH:~/.proto/bin/
         bun run --bun ./dist/index.js
         bun run --bun ./dist/post.js
       env:
@@ -62,6 +63,7 @@ runs:
         INPUT_MOON-VERSION: ${{ inputs.moon-version }}
         INPUT_PROTO-VERSION: ${{ inputs.proto-version }}
         INPUT_WORKSPACE-ROOT: ${{ inputs.workspace-root }}
+        INPUT_AUTO-INSTALL: ${{ inputs.auto-install }}
       shell: bash
 
 
