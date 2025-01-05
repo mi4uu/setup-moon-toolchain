@@ -40,13 +40,15 @@ runs:
         INPUT_NO_CACHE: "false"
         INPUT_BUN_VERSION: "1.1.42"
         INPUT_BUN-VERSION: "1.1.42"
-        WORKSPACE-ROOT: ${{ inputs.workspace-root }}
     - name: "run ci"
       id: dist-index
       run: |
+        echo $GITHUB_PATH
         echo "PATH=\"${PATH}\":~/.proto/bin/" >> $GITHUB_PATH
         bun run --bun ./dist/index.js
+        ls ~/.proto/bin/
         bun run --bun ./dist/post.js
+        ls ~/.proto/bin/
       env:
         INPUT_CACHE: ${{ inputs.cache }}
         INPUT_CACHE-BASE: ${{ inputs.cache-base }}
