@@ -1,8 +1,8 @@
-import execa from 'execa';
 import * as cache from '@actions/cache';
 import * as core from '@actions/core';
 import {
 	getBinDir,
+	getBooleanInput,
 	getCacheKeyPrefix,
 	getPluginsDir,
 	getShimsDir,
@@ -57,13 +57,14 @@ async function run() {
 		if (isUsingMoon() && shouldInstallMoon()) {
 			await installBin('moon');
 		}
-
 		await restoreCache();
+const autoInstall = getBooleanInput('auto-install');
 
-		if (core.getBooleanInput('auto-install')) {
-			core.info('Auto-installing tools');
+		if (autoInstall) {
+			//const { stdout, stderr } = 
+			await Bun.$`proto use`.cwd(getWorkspaceRoot());
 
-			await execa('proto', ['use'], { cwd: getWorkspaceRoot(), stdio: 'inherit' });
+			//await execa('proto', ['use'], { cwd: getWorkspaceRoot(), stdio: 'inherit' });
 		}
 	} catch (error: unknown) {
 		core.setFailed(error as Error);

@@ -1,3 +1,5 @@
+# UPDATED AND BUNIFIED
+
 # Setup proto and moon toolchains
 
 A GitHub action that sets up an environment for proto and moon.
@@ -21,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: moonrepo/setup-toolchain@v0
+      - uses: mi4uu/setup-moon-toolchain@v0
         with:
           auto-install: true
       - run: moon ci
@@ -37,3 +39,11 @@ jobs:
 - `proto-version` - Version of proto to explicitly install.
 - `workspace-root` - Relative path to moon's workspace root if initialized in a sub-directory.
   Defaults to "".
+
+
+
+## CONTRIBUTION
+
+this is a fork of great work of Miles Johnson
+
+oryginal repository can be found here: https://github.com/moonrepo/setup-toolchain

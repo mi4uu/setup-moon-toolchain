@@ -2,13 +2,23 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import execa from 'execa';
 import * as cache from '@actions/cache';
 import * as core from '@actions/core';
 import * as glob from '@actions/glob';
 import * as tc from '@actions/tool-cache';
 
 export const WINDOWS = process.platform === 'win32';
+
+export const getBooleanInput=(name: string): boolean => {
+
+	const trueValue = ['true', '1', 'yes']
+  const falseValue = ['false', '0', 'no']
+  const val = core.getInput(name,{required:false,trimWhitespace:true}).toLowerCase().trim()
+  if (trueValue.includes(val)) return true
+  if (falseValue.includes(val)) return false
+  core.warning(`Input ${name} is not a boolean setting to false`)
+return false
+}
 
 export function getProtoHome() {
 	if (process.env.PROTO_HOME) {
@@ -51,7 +61,11 @@ export function getWorkspaceRoot() {
 }
 
 export function isCacheEnabled() {
-	return core.getBooleanInput('cache') && cache.isFeatureAvailable();
+
+		const is_cache = getBooleanInput('cache');
+
+	const is_available = cache.isFeatureAvailable();
+	return is_available && is_cache;
 }
 
 export function isUsingMoon() {
@@ -60,7 +74,7 @@ export function isUsingMoon() {
 
 export function shouldInstallMoon() {
 	// Not installing with proto, so need to install with the action
-	if (!core.getBooleanInput('auto-install')) {
+	if (!getBooleanInput('auto-install')) {
 		return true;
 	}
 
@@ -161,26 +175,28 @@ export async function installBin(bin: string) {
 	const binDir = getBinDir();
 	const binPath = path.join(binDir, WINDOWS ? `${bin}.exe` : bin);
 	const envPrefix = bin.toUpperCase();
-
-	await execa(script, version === 'latest' ? [] : [version], {
-		env: {
-			[`${envPrefix}_INSTALL_DIR`]: binDir,
-		},
-		stdio: core.isDebug() || !!process.env[`${envPrefix}_DEBUG`] ? 'inherit' : 'pipe',
-	});
+	const env=`${envPrefix}_INSTALL_DIR="${binDir}"`
+	Bun.$`${env} ${script} ${version === 'latest' ? '' : version}`
+	// await execa(script, version === 'latest' ? [] : [version], {
+	// 	env: {
+	// 		[`${envPrefix}_INSTALL_DIR`]: binDir,
+	// 	},
+	// 	stdio: core.isDebug() || !!process.env[`${envPrefix}_DEBUG`] ? 'inherit' : 'pipe',
+	// });
 
 	core.info(`Installed binary to ${binPath}`);
 
 	core.info('Checking version');
 
 	try {
-		const result = await execa(binPath, ['--version'], { stdio: 'pipe' });
+		const result =await Bun.$`${binPath} --version`
+		// await execa(binPath, ['--version'], { stdio: 'pipe' });
 
 		if (result.stdout) {
 			// eslint-disable-next-line require-atomic-updates
-			process.env[`${envPrefix}_CLI_VERSION`] = result.stdout.replace(bin, '').trim();
+			process.env[`${envPrefix}_CLI_VERSION`] = result.stdout.toString().replace(bin, '').trim();
 
-			core.info(result.stdout);
+			core.info(result.stdout.toString());
 		}
 	} catch (error) {
 		core.error(String(error));

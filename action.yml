@@ -1,5 +1,5 @@
-name: 'Setup proto and moon toolchains'
-author: 'Miles Johnson'
+name: 'Setup proto and moon toolchains bunifid'
+author: 'Michal Lipinski'
 description: 'Installs proto and moon globally when required, and caches the toolchain.'
 inputs:
   auto-install:
@@ -8,6 +8,7 @@ inputs:
   cache:
     description: 'Toggle caching of the toolchain directory.'
     default: 'true'
+    required: false
   cache-base:
     description:
       'Base branch/ref to save a warmup cache on. Other branches/refs will restore from this base.'

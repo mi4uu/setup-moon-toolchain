@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-import execa from 'execa';
 import * as cache from '@actions/cache';
 import * as core from '@actions/core';
 import {
@@ -14,7 +13,7 @@ async function cleanToolchain() {
 	try {
 		core.info(`Cleaning toolchain of stale items before caching`);
 
-		await execa('proto', ['clean', '--yes']);
+		await Bun.$`proto clean --yes`;
 	} catch (error: unknown) {
 		core.warning(error as Error);
 	}
