@@ -185,7 +185,7 @@ export async function installBin(bin: string) {
 
 	const binDir = getBinDir();
 	const binPath = path.join(binDir, WINDOWS ? `${bin}.exe` : bin);
-	const envPrefix = bin.toUpperCase();
+	const  envPrefix = bin.toUpperCase();
 	const env = `${envPrefix}_INSTALL_DIR="${binDir}"`;
 	$`${env} ${script} ${version === "latest" ? "" : version}`;
 	// await execa(script, version === 'latest' ? [] : [version], {
@@ -200,6 +200,13 @@ export async function installBin(bin: string) {
 	core.info("Checking version");
 
 	try {
+		core.info(await $`pwd`.text());
+		core.info(await $`ls`.text());
+		core.info(await $`ls  ${binDir} `.text());
+
+		core.info(await $`ls  ${binPath} `.text());
+		core.info(`${env} ${script} ${version === "latest" ? "" : version}`);
+
 		const result = await $`${binPath} --version`;
 		// await execa(binPath, ['--version'], { stdio: 'pipe' });
 
