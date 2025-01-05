@@ -40,13 +40,13 @@ runs:
       run: |
         bun run --bun ./dist/index.js
         bun run --bun ./dist/post.js
-      with:
-        auto-install: ${{ inputs.auto-install }}
-        cache: ${{ inputs.cache }}
-        cache-base: ${{ inputs.cache-base }}
-        moon-version: ${{ inputs.moon-version }}
-        proto-version: ${{ inputs.proto-version }}
-        workspace-root: ${{ inputs.workspace-root }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        INPUT_CACHE: ${{ inputs.cache }}
+        INPUT_CACHE-BASE: ${{ inputs.cache-base }}
+        INPUT_MOON-VERSION: ${{ inputs.moon-version }}
+        INPUT_PROTO-VERSION: ${{ inputs.proto-version }}
+        INPUT_WORKSPACE-ROOT: ${{ inputs.workspace-root }}
       shell: bash
 
 
