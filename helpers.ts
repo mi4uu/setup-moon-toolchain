@@ -1,24 +1,26 @@
-import crypto from 'node:crypto';
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
-import * as cache from '@actions/cache';
-import * as core from '@actions/core';
-import * as glob from '@actions/glob';
-import * as tc from '@actions/tool-cache';
+import crypto from "node:crypto";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import * as cache from "@actions/cache";
+import * as core from "@actions/core";
+import * as glob from "@actions/glob";
+import * as tc from "@actions/tool-cache";
 
-export const WINDOWS = process.platform === 'win32';
+export const WINDOWS = process.platform === "win32";
 
-export const getBooleanInput=(name: string): boolean => {
-
-	const trueValue = ['true', '1', 'yes']
-  const falseValue = ['false', '0', 'no']
-  const val = core.getInput(name,{required:false,trimWhitespace:true}).toLowerCase().trim()
-  if (trueValue.includes(val)) return true
-  if (falseValue.includes(val)) return false
-  core.warning(`Input ${name} is not a boolean setting to false`)
-return false
-}
+export const getBooleanInput = (name: string): boolean => {
+	const trueValue = ["true", "1", "yes"];
+	const falseValue = ["false", "0", "no"];
+	const val = core
+		.getInput(name, { required: false, trimWhitespace: true })
+		.toLowerCase()
+		.trim();
+	if (trueValue.includes(val)) return true;
+	if (falseValue.includes(val)) return false;
+	core.warning(`Input ${name} is not a boolean setting to false`);
+	return false;
+};
 
 export function getProtoHome() {
 	if (process.env.PROTO_HOME) {
@@ -29,27 +31,27 @@ export function getProtoHome() {
 		return process.env.PROTO_ROOT;
 	}
 
-	return path.join(os.homedir(), '.proto');
+	return path.join(os.homedir(), ".proto");
 }
 
 export function getBinDir() {
-	return path.join(getProtoHome(), 'bin');
+	return path.join(getProtoHome(), "bin");
 }
 
 export function getPluginsDir() {
-	return path.join(getProtoHome(), 'plugins');
+	return path.join(getProtoHome(), "plugins");
 }
 
 export function getShimsDir() {
-	return path.join(getProtoHome(), 'shims');
+	return path.join(getProtoHome(), "shims");
 }
 
 export function getToolsDir() {
-	return path.join(getProtoHome(), 'tools');
+	return path.join(getProtoHome(), "tools");
 }
 
 export function getUidFile() {
-	return path.join(getProtoHome(), 'id');
+	return path.join(getProtoHome(), "id");
 }
 
 export function getWorkingDir() {
@@ -57,35 +59,37 @@ export function getWorkingDir() {
 }
 
 export function getWorkspaceRoot() {
-	return path.join(getWorkingDir(), core.getInput('workspace-root'));
+	return path.join(getWorkingDir(), core.getInput("workspace-root"));
 }
 
 export function isCacheEnabled() {
-
-		const is_cache = getBooleanInput('cache');
+	const is_cache = getBooleanInput("cache");
 
 	const is_available = cache.isFeatureAvailable();
 	return is_available && is_cache;
 }
 
 export function isUsingMoon() {
-	return !!core.getInput('moon-version') || fs.existsSync(path.join(getWorkspaceRoot(), '.moon'));
+	return (
+		!!core.getInput("moon-version") ||
+		fs.existsSync(path.join(getWorkspaceRoot(), ".moon"))
+	);
 }
 
 export function shouldInstallMoon() {
 	// Not installing with proto, so need to install with the action
-	if (!getBooleanInput('auto-install')) {
+	if (!getBooleanInput("auto-install")) {
 		return true;
 	}
 
-	const prototools = path.join(getWorkspaceRoot(), '.prototools');
+	const prototools = path.join(getWorkspaceRoot(), ".prototools");
 
 	if (fs.existsSync(prototools)) {
-		const lines = fs.readFileSync(prototools, 'utf8').split('\n');
+		const lines = fs.readFileSync(prototools, "utf8").split("\n");
 
 		for (const line of lines) {
 			// If we encountered a table, then we are out of the versions mapping
-			if (line.startsWith('[')) {
+			if (line.startsWith("[")) {
 				break;
 			}
 
@@ -101,33 +105,36 @@ export function shouldInstallMoon() {
 }
 
 export function extractMajorMinor(version: string) {
-	const [major, minor] = version.split('.');
+	const [major, minor] = version.split(".");
 
 	return `${major}.${minor}`;
 }
 
 export function getCacheKeyPrefix() {
 	// v1 - Before proto v0.24 changes
-	return 'moonrepo-toolchain-v2';
+	return "moonrepo-toolchain-v2";
 }
 
 export async function getToolchainCacheKey() {
-	const hasher = crypto.createHash('sha1');
-	const files = ['.prototools'];
+	const hasher = crypto.createHash("sha1");
+	const files = [".prototools"];
 
 	if (isUsingMoon()) {
-		const root = core.getInput('workspace-root');
+		const root = core.getInput("workspace-root");
 
 		if (root) {
-			files.push(path.join(root, '.prototools'), path.join(root, '.moon/toolchain.yml'));
+			files.push(
+				path.join(root, ".prototools"),
+				path.join(root, ".moon/toolchain.yml"),
+			);
 		} else {
-			files.push('.moon/toolchain.yml');
+			files.push(".moon/toolchain.yml");
 		}
 	}
 
-	core.debug(`Hashing files: ${files.join(', ')}`);
+	core.debug(`Hashing files: ${files.join(", ")}`);
 
-	hasher.update(await glob.hashFiles(files.join('\n')));
+	hasher.update(await glob.hashFiles(files.join("\n")));
 
 	const protoVersion = process.env.PROTO_CLI_VERSION;
 
@@ -145,38 +152,41 @@ export async function getToolchainCacheKey() {
 		hasher.update(extractMajorMinor(moonVersion));
 	}
 
-	return `${getCacheKeyPrefix()}-${process.platform}-${hasher.digest('hex')}`;
+	return `${getCacheKeyPrefix()}-${process.platform}-${hasher.digest("hex")}`;
 }
 
 export async function installBin(bin: string) {
 	core.info(`Installing \`${bin}\` globally`);
 
-	const version = core.getInput(`${bin}-version`) || 'latest';
+	const version = core.getInput(`${bin}-version`) || "latest";
 
 	const scriptName = WINDOWS ? `${bin}.ps1` : `${bin}.sh`;
-	const scriptPath = path.join(getProtoHome(), 'temp', scriptName);
+	const scriptPath = path.join(getProtoHome(), "temp", scriptName);
 
 	// If the installer already exists, delete it and ensure were using the latest
 	if (fs.existsSync(scriptPath)) {
 		fs.unlinkSync(scriptPath);
 	}
 
-	core.info('Downloading installation script');
+	core.info("Downloading installation script");
 
-	const script = await tc.downloadTool(`https://moonrepo.dev/install/${scriptName}`, scriptPath);
+	const script = await tc.downloadTool(
+		`https://moonrepo.dev/install/${scriptName}`,
+		scriptPath,
+	);
 
 	// eslint-disable-next-line no-magic-numbers
 	await fs.promises.chmod(script, 0o755);
 
 	core.info(`Downloaded script to ${script}`);
 
-	core.info('Executing installation script');
+	core.info("Executing installation script");
 
 	const binDir = getBinDir();
 	const binPath = path.join(binDir, WINDOWS ? `${bin}.exe` : bin);
 	const envPrefix = bin.toUpperCase();
-	const env=`${envPrefix}_INSTALL_DIR="${binDir}"`
-	Bun.$`${env} ${script} ${version === 'latest' ? '' : version}`
+	const env = `${envPrefix}_INSTALL_DIR="${binDir}"`;
+	Bun.$`${env} ${script} ${version === "latest" ? "" : version}`;
 	// await execa(script, version === 'latest' ? [] : [version], {
 	// 	env: {
 	// 		[`${envPrefix}_INSTALL_DIR`]: binDir,
@@ -186,15 +196,18 @@ export async function installBin(bin: string) {
 
 	core.info(`Installed binary to ${binPath}`);
 
-	core.info('Checking version');
+	core.info("Checking version");
 
 	try {
-		const result =await Bun.$`${binPath} --version`
+		const result = await Bun.$`${binPath} --version`;
 		// await execa(binPath, ['--version'], { stdio: 'pipe' });
 
 		if (result.stdout) {
 			// eslint-disable-next-line require-atomic-updates
-			process.env[`${envPrefix}_CLI_VERSION`] = result.stdout.toString().replace(bin, '').trim();
+			process.env[`${envPrefix}_CLI_VERSION`] = result.stdout
+				.toString()
+				.replace(bin, "")
+				.trim();
 
 			core.info(result.stdout.toString());
 		}

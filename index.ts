@@ -1,5 +1,5 @@
-import * as cache from '@actions/cache';
-import * as core from '@actions/core';
+import * as cache from "@actions/cache";
+import * as core from "@actions/core";
 import {
 	getBinDir,
 	getBooleanInput,
@@ -14,14 +14,14 @@ import {
 	isCacheEnabled,
 	isUsingMoon,
 	shouldInstallMoon,
-} from './helpers';
+} from "./helpers";
 
 async function restoreCache() {
 	if (!isCacheEnabled()) {
 		return;
 	}
 
-	core.info('Attempting to restore cached toolchain');
+	core.info("Attempting to restore cached toolchain");
 
 	const primaryKey = await getToolchainCacheKey();
 	const cachePrefix = getCacheKeyPrefix();
@@ -33,14 +33,14 @@ async function restoreCache() {
 	);
 
 	if (cacheKey) {
-		core.saveState('cacheHitKey', cacheKey);
+		core.saveState("cacheHitKey", cacheKey);
 		core.info(`Toolchain cache restored using key ${primaryKey}`);
 	} else {
 		core.info(`Toolchain cache does not exist using key ${primaryKey}`);
 	}
 
-	core.setOutput('cache-key', cacheKey ?? primaryKey);
-	core.setOutput('cache-hit', !!cacheKey);
+	core.setOutput("cache-key", cacheKey ?? primaryKey);
+	core.setOutput("cache-hit", !!cacheKey);
 }
 
 async function run() {
@@ -52,16 +52,16 @@ async function run() {
 		core.addPath(binDir);
 		core.addPath(shimsDir);
 
-		await installBin('proto');
+		await installBin("proto");
 
 		if (isUsingMoon() && shouldInstallMoon()) {
-			await installBin('moon');
+			await installBin("moon");
 		}
 		await restoreCache();
-const autoInstall = getBooleanInput('auto-install');
+		const autoInstall = getBooleanInput("auto-install");
 
 		if (autoInstall) {
-			//const { stdout, stderr } = 
+			//const { stdout, stderr } =
 			await Bun.$`proto use`.cwd(getWorkspaceRoot());
 
 			//await execa('proto', ['use'], { cwd: getWorkspaceRoot(), stdio: 'inherit' });

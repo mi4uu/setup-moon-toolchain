@@ -1,17 +1,17 @@
-import fs from 'node:fs';
-import * as cache from '@actions/cache';
-import * as core from '@actions/core';
+import fs from "node:fs";
+import * as cache from "@actions/cache";
+import * as core from "@actions/core";
 import {
 	getPluginsDir,
 	getToolchainCacheKey,
 	getToolsDir,
 	getUidFile,
 	isCacheEnabled,
-} from './helpers';
+} from "./helpers";
 
 async function cleanToolchain() {
 	try {
-		core.info(`Cleaning toolchain of stale items before caching`);
+		core.info("Cleaning toolchain of stale items before caching");
 
 		await Bun.$`proto clean --yes`;
 	} catch (error: unknown) {
@@ -20,12 +20,12 @@ async function cleanToolchain() {
 }
 
 function shouldSaveCache() {
-	const base = core.getInput('cache-base');
+	const base = core.getInput("cache-base");
 
 	// Only save the cache for the following 2 scenarios:
 	//	- If not using the base warmup strategy.
 	//	- If using the base warmup strategy, and the current ref matches.
-	return !base || !!(base && !!(process.env.GITHUB_REF_NAME ?? '').match(base));
+	return !base || !!(base && !!(process.env.GITHUB_REF_NAME ?? "").match(base));
 }
 
 async function saveCache() {
@@ -36,16 +36,18 @@ async function saveCache() {
 	const toolsDir = getToolsDir();
 
 	if (!fs.existsSync(toolsDir)) {
-		core.info(`Toolchain does not exist, not saving cache`);
+		core.info("Toolchain does not exist, not saving cache");
 		return;
 	}
 
 	try {
 		const primaryKey = await getToolchainCacheKey();
-		const cacheHitKey = core.getState('cacheHitKey');
+		const cacheHitKey = core.getState("cacheHitKey");
 
 		if (cacheHitKey === primaryKey) {
-			core.info(`Cache hit occured on the key ${cacheHitKey}, not saving cache`);
+			core.info(
+				`Cache hit occured on the key ${cacheHitKey}, not saving cache`,
+			);
 			return;
 		}
 
@@ -53,11 +55,13 @@ async function saveCache() {
 
 		core.info(`Saving cache with key ${primaryKey}`);
 
-		await cache.saveCache([getPluginsDir(), toolsDir, getUidFile()], primaryKey);
+		await cache.saveCache(
+			[getPluginsDir(), toolsDir, getUidFile()],
+			primaryKey,
+		);
 	} catch (error: unknown) {
 		core.setFailed(error as Error);
 	}
-	
 }
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
