@@ -37,11 +37,18 @@ runs:
     - uses: oven-sh/setup-bun@v2
     - name: "run ci"
       id: dist-index
-      run: bun run --bun ./dist/index.js
+      run: |
+        bun run --bun ./dist/index.js
+        bun run --bun ./dist/post.js
+      with:
+        auto-install: ${{ inputs.auto-install }}
+        cache: ${{ inputs.cache }}
+        cache-base: ${{ inputs.cache-base }}
+        moon-version: ${{ inputs.moon-version }}
+        proto-version: ${{ inputs.proto-version }}
+        workspace-root: ${{ inputs.workspace-root }}
       shell: bash
-    - name: "run post"
-      run: bun run --bun ./dist/post.js
-      shell: bash
+
 
 
 branding:
