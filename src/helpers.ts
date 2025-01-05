@@ -185,7 +185,7 @@ export async function installBin(bin: string) {
 
 	const binDir = getBinDir();
 	const binPath = path.join(binDir, WINDOWS ? `${bin}.exe` : bin);
-	const  envPrefix = bin.toUpperCase();
+	const envPrefix = bin.toUpperCase();
 	const env = `${envPrefix}_INSTALL_DIR="${binDir}"`;
 	$`${env} ${script} ${version === "latest" ? "" : version}`;
 	// await execa(script, version === 'latest' ? [] : [version], {
