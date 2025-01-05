@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"type_": "module",
 	"description": "A GitHub action to setup and cache the proto and moon toolchains. BUNIFIED",
-	"main": "dist/index",
+	"main": "dist/index.js",
 	"scripts": {
 		"build:post": "bun build --entrypoints ./post.ts --outfile ./dist/post/index --compile",
 		"build:index": "bun build --entrypoints ./index.ts --outfile ./dist/index --compile",
