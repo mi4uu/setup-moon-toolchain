@@ -1,9 +1,9 @@
 {
 	"name": "@mi4uu/setup-moon-toolchain",
-	"version": "0.3.3",
+	"version": "0.0.1",
 	"type_": "module",
 	"description": "A GitHub action to setup and cache the proto and moon toolchains. BUNIFIED",
-	"main_": "dist/index",
+	"main": "dist/index",
 	"scripts": {
 		"build:post": "bun build --entrypoints ./post.ts --outfile ./dist/post/index --compile",
 		"build:index": "bun build --entrypoints ./index.ts --outfile ./dist/index --compile",
