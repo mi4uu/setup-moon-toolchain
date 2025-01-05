@@ -34,7 +34,23 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    - uses: oven-sh/setup-bun@v2
+    - uses: actions/cache@v4
+      id: cache
+      with:
+        path: |
+          ~/.proto
+        key: ${{ runner.os }}-proto
+    - name: Install proto and moon
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+            curl -fsSL https://moonrepo.dev/install/proto.sh | bash -s -- --yes
+            pwd
+            ls
+            proto 
+            proto plugin add moon "https://raw.githubusercontent.com/moonrepo/moon/master/proto-plugin.toml" --to global
+            proto install moon
+            proto install bun
+      shell: bash
     - name: "run ci"
       id: dist-index
       run: |
